@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.repository.RoleRepository;
-import com.example.demo.vo.Role;
+import com.example.demo.entity.Role;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

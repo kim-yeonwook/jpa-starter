@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.service.MemberService;
 import com.example.demo.service.RoleService;
-import com.example.demo.vo.Member;
-import com.example.demo.vo.MemberHistory;
-import com.example.demo.vo.Role;
+import com.example.demo.entity.Member;
+import com.example.demo.entity.MemberHistory;
+import com.example.demo.entity.Role;
 
 import lombok.RequiredArgsConstructor;
 
@@ -82,13 +82,13 @@ public class MemberController {
 	}
 	
 	@DeleteMapping("/member/{id}")
-	public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
+	public ResponseEntity<Long> delete(@PathVariable("id") Long id) throws Exception {
 		memberService.getMember(id);
 		return new ResponseEntity<>(id, HttpStatus.OK);
 	}
 	
 	@GetMapping("/member/{id}")
-	public ResponseEntity<Member> findOne(@PathVariable("id") Long id) {
+	public ResponseEntity<Member> findOne(@PathVariable("id") Long id) throws Exception {
 		Member oneMember = memberService.getMember(id);
 		return new ResponseEntity<>(oneMember, HttpStatus.OK);
 	}

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.example.demo.repository.MemberRepository;
-import com.example.demo.vo.Member;
+import com.example.demo.entity.Member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,8 @@ public class MemberService {
 		return memberRepository.findAll();
 	}
 	
-	public Member getMember(Long id) {
+	public Member getMember(Long id) throws Exception {
+		Member member = memberRepository.findById(id).orElseThrow(() -> new Exception());
 		return memberRepository.findById(id).get();
 	}
 	
