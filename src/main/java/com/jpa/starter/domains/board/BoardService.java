@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,18 +22,19 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public Board saveBoard(String code, String name, String user, String categoryCode) {
+    @Transactional
+    public Board save(String code, String name, String description, String user, String categoryCode) {
         // 코드 중복 체크
 
         // 이름 중복 체크
 
         // 카테고리
-        Category category = this.categoryRepository.findByCode(categoryCode)
-                .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다."));
+        Category category = getCategory(categoryCode);
 
         Board board = Board.builder()
                 .code(code)
                 .name(name)
+                .description(description)
                 .status(BoardStatus.ACTIVE)
                 .createdId(user)
                 .category(category)
@@ -41,13 +43,33 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
-    public Board get(String code) {
-        return boardRepository.findByCode(code)
-                .orElse(null);
+    @Transactional
+    public Board updateInfo(String code, String name, String description, String user, String categoryCode) {
+        Board board = get(code);
+        board.updateInfo(name, description, user);
+
+        if (!board.getCategory().getCode().equals(categoryCode)) {
+            Category category = getCategory(categoryCode);
+            board.add(category);
+        }
+
+        return this.boardRepository.save(board);
     }
 
-    public void remove(String code) {
-        this.boardRepository.removeByCode(code);
+    @Transactional
+    public Board updateStatus(String code, String status, String user) {
+        Board board = get(code);
+        board.updateStatus(BoardStatus.valueOf(status), user);
+
+        return this.boardRepository.save(board);
+    }
+
+    @Transactional
+    public void delete(String code, String user) {
+        Board board = get(code);
+        board.updateStatus(BoardStatus.DELETED, user);
+
+        this.boardRepository.save(board);
     }
 
     public Page<Board> list(SearchBoardListRequest search, Pageable pageable) {
@@ -56,5 +78,20 @@ public class BoardService {
 
     public List<Board> list(SearchBoardListRequest search) {
         return null;
+    }
+
+    public Board info(String code) {
+        return boardRepository.findByCode(code)
+                .orElse(null);
+    }
+
+    private Board get(String code) {
+        return boardRepository.findByCode(code)
+                .orElseThrow(() -> new IllegalArgumentException("게시판이 존재하지 않습니다. code : " + code));
+    }
+
+    private Category getCategory(String code) {
+        return this.categoryRepository.findByCode(code)
+                .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다. code : " + code));
     }
 }

@@ -28,6 +28,8 @@ public class Board {
     @Column(unique = true)
     private String name;
 
+    private String description;
+
     @Convert(converter = BoardStatusConverter.class)
     private BoardStatus status;
 
@@ -42,4 +44,19 @@ public class Board {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    public void updateStatus(BoardStatus status, String user) {
+        this.status = status;
+        this.updatedId = user;
+    }
+
+    public void updateInfo(String name, String description, String user) {
+        this.name = name;
+        this.description = description;
+        this.updatedId = user;
+    }
+
+    public void add(Category category) {
+        this.category = category;
+    }
 }
