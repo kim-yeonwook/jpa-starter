@@ -5,7 +5,6 @@ import com.jpa.starter.infrastructure.persistence.repository.custom.BoardReposit
 import com.jpa.starter.web.dto.SearchBoardListRequest;
 import com.jpa.starter.web.dto.SearchBoardTupleListResponse;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
