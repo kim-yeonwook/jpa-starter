@@ -5,7 +5,7 @@ import com.jpa.starter.infrastructure.enums.PostStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 @Table(name = "post")
@@ -28,11 +28,17 @@ public class Post {
 
     private String createdId;
 
-    private LocalDateTime createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
 
     private String updatedId;
 
-    private LocalDateTime updatedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     @OneToMany(mappedBy = "post")
     private Set<PostImage> postImageSet;

@@ -81,7 +81,7 @@ public class BoardService {
     }
 
     public Board info(String code) {
-        return boardRepository.findByCode(code)
+        return boardRepository.findByCodeAndStatusIn(code, BoardStatus.ACTIVE)
                 .orElse(null);
     }
 

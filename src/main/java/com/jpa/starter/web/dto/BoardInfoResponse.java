@@ -5,7 +5,7 @@ import com.jpa.starter.infrastructure.persistence.entity.Board;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Builder
 @Data
@@ -21,11 +21,11 @@ public class BoardInfoResponse {
 
     private String createdId;
 
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     private String updatedId;
 
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 
     private CategoryInfoResponse category;
 

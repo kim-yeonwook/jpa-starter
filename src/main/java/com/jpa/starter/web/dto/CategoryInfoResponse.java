@@ -5,7 +5,7 @@ import com.jpa.starter.infrastructure.persistence.entity.Category;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Builder
 @Data
@@ -21,11 +21,11 @@ public class CategoryInfoResponse {
 
     private String createdId;
 
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     private String updatedId;
 
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 
     public static CategoryInfoResponse fromEntity(Category category) {
         return CategoryInfoResponse.builder()

@@ -12,7 +12,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -44,13 +44,15 @@ public class Category {
 
     private String createdId;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     private String updatedId;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 
     @OneToMany(mappedBy = "category")
     private Set<Board> boardSet;

@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.jpa.starter.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 
-@DataJpaTest
+//@DataJpaTest
 public class MemberServiceTest {
 
 //    @Autowired
