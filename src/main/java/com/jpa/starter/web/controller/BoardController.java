@@ -51,7 +51,9 @@ public class BoardController {
 
     @GetMapping
     public ResponseEntity<?> list(@ModelAttribute SearchBoardListRequest dto, @PageableDefault Pageable pageable) {
-        return null;
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.boardApplicationService.getBoardList(dto, pageable));
     }
 
     @GetMapping("{code}")

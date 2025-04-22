@@ -3,7 +3,11 @@ package com.jpa.starter.infrastructure.persistence.repository.custom.impl;
 import com.jpa.starter.infrastructure.persistence.entity.Board;
 import com.jpa.starter.infrastructure.persistence.repository.custom.BoardRepositoryCustom;
 import com.jpa.starter.web.dto.SearchBoardListRequest;
+import com.jpa.starter.web.dto.SearchBoardTupleListResponse;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,8 +19,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.jpa.starter.infrastructure.persistence.entity.QBoard.board;
+import static com.jpa.starter.infrastructure.persistence.entity.QPost.post;
 
 @RequiredArgsConstructor
 @Repository
@@ -53,6 +59,39 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 )
                 .orderBy(board.id.desc())
                 .fetch();
+    }
+
+    @Override
+    public Page<SearchBoardTupleListResponse> boardListTuple(SearchBoardListRequest request, Pageable pageable) {
+        List<Tuple> list = this.jpaQueryFactory
+                .select(
+                        board.code,
+                        board.name,
+                        board.description,
+                        Expressions.stringTemplate("string_agg({0}, {1})", post.title, ",")
+                )
+                .from(board)
+                .join(post).on(board.id.eq(post.board.id))
+                .where(
+                        categoryCodeEq(request.categoryCode()),
+                        startDateGoe(request.startDate()),
+                        endDateLoe(request.endDate())
+                )
+                .groupBy(board.code, board.name, board.description)
+                .offset(pageable.getOffset()).limit(pageable.getPageSize())
+                .fetch();
+        Long total = this.totalCount(request);
+
+        List<SearchBoardTupleListResponse> result = list.stream()
+                .map(b -> new SearchBoardTupleListResponse(
+                        b.get(0, String.class),
+                        b.get(1, String.class),
+                        b.get(2, String.class),
+                        b.get(3, String.class)
+                ))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(result, pageable, total);
     }
 
     private Long totalCount(SearchBoardListRequest request) {

@@ -6,6 +6,7 @@ import com.jpa.starter.infrastructure.persistence.entity.Category;
 import com.jpa.starter.infrastructure.persistence.repository.BoardRepository;
 import com.jpa.starter.infrastructure.persistence.repository.CategoryRepository;
 import com.jpa.starter.web.dto.SearchBoardListRequest;
+import com.jpa.starter.web.dto.SearchBoardTupleListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,11 +74,15 @@ public class BoardService {
     }
 
     public Page<Board> list(SearchBoardListRequest search, Pageable pageable) {
-        return null;
+        return this.boardRepository.boardList(search, pageable);
     }
 
     public List<Board> list(SearchBoardListRequest search) {
-        return null;
+        return this.boardRepository.boardList(search);
+    }
+
+    public Page<SearchBoardTupleListResponse> listTuple(SearchBoardListRequest search, Pageable pageable) {
+        return this.boardRepository.boardListTuple(search, pageable);
     }
 
     public Board info(String code) {

@@ -4,9 +4,13 @@ import com.jpa.starter.domains.board.BoardService;
 import com.jpa.starter.infrastructure.persistence.entity.Board;
 import com.jpa.starter.web.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -46,6 +50,33 @@ public class BoardApplicationService {
         ).getCode();
 
         return new UniqueCodeResponse(result);
+    }
+
+    public Page<SearchBoardListResponse> getBoardList(SearchBoardListRequest request, Pageable pageable) {
+        return this.boardService.list(request, pageable)
+                .map(b -> new SearchBoardListResponse(
+                        b.getCode(),
+                        b.getName(),
+                        b.getDescription(),
+                        b.getCreatedId(),
+                        b.getCreatedAt()
+                ));
+    }
+
+    public List<SearchBoardListResponse> getBoardList(SearchBoardListRequest request) {
+        return this.boardService.list(request)
+                .stream()
+                .map(b -> new SearchBoardListResponse(
+                        b.getCode(),
+                        b.getName(),
+                        b.getDescription(),
+                        b.getCreatedId(),
+                        b.getCreatedAt()
+                )).collect(Collectors.toList());
+    }
+
+    public Page<SearchBoardTupleListResponse> getTupleList(SearchBoardListRequest request) {
+        return null;
     }
 
     public BoardInfoResponse getBoard(String code) {
